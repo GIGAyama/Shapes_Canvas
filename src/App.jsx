@@ -12,10 +12,11 @@ import {
 // ==========================================
 
 // ふりがな（ルビ）コンポーネント
+// ベースラインの崩れを防ぐため translateY を削除し、自然なルビの配置に修正
 const R = ({ children, rt }) => (
   <ruby style={{ rubyPosition: 'over', textDecoration: 'none' }}>
     {children}
-    <rt className="text-[0.6em] text-slate-500 font-medium select-none tracking-tighter" style={{ transform: 'translateY(-2px)' }}>
+    <rt className="text-[0.6em] text-slate-500 font-medium select-none tracking-tighter">
       {rt}
     </rt>
   </ruby>
@@ -36,7 +37,7 @@ const ToolButton = ({ onClick, icon: Icon, label, rt, variant = 'primary', class
   return (
     <button onClick={onClick} className={`${baseStyle} ${variants[variant]} ${activeStyle} ${className}`}>
       {Icon && <Icon size={22} strokeWidth={2.5} />}
-      <span className="text-xs font-bold leading-none mt-1"><R rt={rt}>{label}</R></span>
+      <span className="text-xs font-bold leading-none mt-1"><span><R rt={rt}>{label}</R></span></span>
     </button>
   );
 };
@@ -539,13 +540,13 @@ export default function MathLearningStudio() {
       .then(() => {
         openModal('info', { 
             title: 'リンクをコピーしました！', 
-            message: <>このURLを<R rt="じどう">児童</R>のたんまつに<R rt="おく">送</R>ると、<R rt="いま">今</R>のボードの<R rt="じょうたい">状態</R>から<R rt="がくしゅう">学習</R>をスタートできます。</>
+            message: <span>このURLを<R rt="じどう">児童</R>のたんまつに<R rt="おく">送</R>ると、<R rt="いま">今</R>のボードの<R rt="じょうたい">状態</R>から<R rt="がくしゅう">学習</R>をスタートできます。</span>
         });
       })
       .catch(() => {
         openModal('info', { 
             title: 'リンクをコピーできませんでした', 
-            message: <><R rt="いか">以下</R>のURLをコピーして<R rt="きょうゆう">共有</R>してください:<br/><br/>{shareUrl}</>
+            message: <span><R rt="いか">以下</R>のURLをコピーして<R rt="きょうゆう">共有</R>してください:<br/><br/>{shareUrl}</span>
         });
       });
   };
@@ -679,15 +680,15 @@ export default function MathLearningStudio() {
     const activeObj = canvas.getActiveObject();
     if (!activeObj) {
         openModal('info', { 
-            title: <><R rt="ずけい">図形</R>を<R rt="えら">選</R>んでください</>, 
-            message: <><R rt="かたち">形</R>を<R rt="か">変</R>えたい<R rt="ずけい">図形</R>をクリックしてからボタンを<R rt="お">押</R>してね。</> 
+            title: <span><R rt="ずけい">図形</R>を<R rt="えら">選</R>んでください</span>, 
+            message: <span><R rt="かたち">形</R>を<R rt="か">変</R>えたい<R rt="ずけい">図形</R>をクリックしてからボタンを<R rt="お">押</R>してね。</span> 
         });
         return;
     }
     if (activeObj.isTool || activeObj.type === 'activeSelection') {
         openModal('info', { 
             title: 'できません', 
-            message: <>このアイテムは<R rt="かたち">形</R>を<R rt="か">変</R>えられません。</> 
+            message: <span>このアイテムは<R rt="かたち">形</R>を<R rt="か">変</R>えられません。</span> 
         });
         return;
     }
@@ -962,12 +963,12 @@ export default function MathLearningStudio() {
           
           <button onClick={generateShareLink} className="flex items-center gap-2 bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 px-4 py-2 rounded-xl font-bold transition-colors shadow-sm active:scale-95">
             <Link size={20} />
-            <R rt="もんだい">問題</R>を<R rt="くば">配</R>る
+            <span><R rt="もんだい">問題</R>を<R rt="くば">配</R>る</span>
           </button>
 
           <button onClick={downloadImage} className="flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 px-4 py-2 rounded-xl font-bold transition-colors shadow-sm active:scale-95">
             <ImageIcon size={20} />
-            <R rt="がぞう">画像</R>に<R rt="ほぞん">保存</R>
+            <span><R rt="がぞう">画像</R>に<R rt="ほぞん">保存</R></span>
           </button>
         </div>
       </nav>
@@ -979,7 +980,7 @@ export default function MathLearningStudio() {
         <aside className="w-64 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col overflow-hidden shrink-0 z-10">
           <div className="bg-indigo-600 text-white p-3 font-bold flex items-center gap-2 shadow-sm shrink-0">
             <PenTool size={20} />
-            <R rt="どうぐばこ">道具箱</R>
+            <span><R rt="どうぐばこ">道具箱</R></span>
           </div>
           
           <div className="flex-1 overflow-y-auto custom-scrollbar p-4 flex flex-col gap-6">
@@ -987,7 +988,7 @@ export default function MathLearningStudio() {
             {/* Shapes Section */}
             <section>
               <h3 className="text-sm font-bold text-slate-400 mb-3 flex items-center gap-2 border-b border-slate-100 pb-1">
-                <Square size={16}/> <R rt="ずけい">図形</R>
+                <Square size={16}/> <span><R rt="ずけい">図形</R></span>
               </h3>
               <div className="grid grid-cols-2 gap-2">
                 <ToolButton onClick={() => addShape('rect')} icon={Square} label="四角" rt="しかく" />
@@ -996,14 +997,14 @@ export default function MathLearningStudio() {
                 <ToolButton onClick={() => openModal('polygon')} icon={Hexagon} label="多角形" rt="たかくけい" />
               </div>
               <button onClick={() => openModal('sizeBuilder')} className="mt-3 w-full bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 py-2.5 rounded-xl font-bold text-sm transition-colors active:scale-95 flex justify-center items-center gap-1 shadow-sm">
-                <Grid3X3 size={18} /> <R rt="さいず">サイズ</R>で<R rt="つく">作</R>る
+                <Grid3X3 size={18} /> <span>サイズで<R rt="つく">作</R>る</span>
               </button>
             </section>
 
             {/* Tools Section */}
             <section>
               <h3 className="text-sm font-bold text-slate-400 mb-3 flex items-center gap-2 border-b border-slate-100 pb-1">
-                <Ruler size={16}/> <R rt="じょうぎ">定規</R>ツール
+                <Ruler size={16}/> <span><R rt="じょうぎ">定規</R>ツール</span>
               </h3>
               <div className="grid grid-cols-2 gap-2">
                 <ToolButton onClick={addRuler} icon={Ruler} label="定規" rt="じょうぎ" variant="neutral" />
@@ -1014,7 +1015,7 @@ export default function MathLearningStudio() {
             {/* Operations Section */}
             <section>
               <h3 className="text-sm font-bold text-slate-400 mb-3 flex items-center gap-2 border-b border-slate-100 pb-1">
-                <MousePointer2 size={16}/> <R rt="そうさ">操作</R>
+                <MousePointer2 size={16}/> <span><R rt="そうさ">操作</R></span>
               </h3>
               <div className="flex flex-col gap-2">
                 <div className="grid grid-cols-2 gap-2">
@@ -1045,7 +1046,7 @@ export default function MathLearningStudio() {
              {/* Settings & Colors Section */}
              <section className="mt-auto pt-4 border-t border-slate-100">
               <div className="mb-4">
-                <label className="text-sm font-bold text-slate-500 mb-2 block"><R rt="いろ">色</R></label>
+                <label className="text-sm font-bold text-slate-500 mb-2 block"><span><R rt="いろ">色</R></span></label>
                 
                 {/* プリセットカラーパレット */}
                 <div className="flex flex-wrap gap-2 mb-3">
@@ -1068,7 +1069,7 @@ export default function MathLearningStudio() {
                     className="w-10 h-10 rounded-xl border-2 border-slate-200 cursor-pointer p-1 bg-white shrink-0"
                   />
                   <div className="text-[11px] text-slate-400 font-medium leading-tight">
-                    <R rt="ずけい">図形</R>を<R rt="えら">選</R>んで<br/><R rt="いろ">色</R>を<R rt="か">変</R>えられます
+                    <span><R rt="ずけい">図形</R>を<R rt="えら">選</R>んで<br/><R rt="いろ">色</R>を<R rt="か">変</R>えられます</span>
                   </div>
                 </div>
               </div>
@@ -1079,7 +1080,7 @@ export default function MathLearningStudio() {
                     <input type="checkbox" className="sr-only peer" checked={snapToGrid} onChange={e => setSnapToGrid(e.target.checked)} />
                     <div className="w-10 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
                   </div>
-                  <span className="text-sm font-bold text-slate-700"><R rt="ほうがん">方眼</R>に<R rt="あ">合</R>わせる</span>
+                  <span className="text-sm font-bold text-slate-700"><span><R rt="ほうがん">方眼</R>に<R rt="あ">合</R>わせる</span></span>
                 </label>
                 
                 <label className="flex items-center gap-3 cursor-pointer select-none">
@@ -1087,12 +1088,12 @@ export default function MathLearningStudio() {
                     <input type="checkbox" className="sr-only peer" checked={snapToAngle} onChange={e => setSnapToAngle(e.target.checked)} />
                     <div className="w-10 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
                   </div>
-                  <span className="text-sm font-bold text-slate-700"><R rt="かくど">角度</R>ピタッ</span>
+                  <span className="text-sm font-bold text-slate-700"><span><R rt="かくど">角度</R>ピタッ</span></span>
                 </label>
               </div>
 
                <button onClick={confirmClearCanvas} className="mt-4 w-full py-2.5 text-sm font-bold text-slate-500 hover:bg-slate-100 hover:text-red-500 rounded-xl transition-colors flex justify-center items-center gap-1">
-                 <Eraser size={16} /> <R rt="ぜんぶ">全部</R><R rt="け">消</R>す
+                 <Eraser size={16} /> <span><R rt="ぜんぶ">全部</R><R rt="け">消</R>す</span>
                </button>
             </section>
 
@@ -1108,8 +1109,8 @@ export default function MathLearningStudio() {
           {/* Edit Mode Overlay Indicator */}
           {isEditMode && (
              <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-amber-500 text-white px-6 py-2 rounded-full font-bold shadow-lg flex items-center gap-2 animate-in slide-in-from-top-4 pointer-events-none">
-               <PenTool size={18} /> <R rt="ちょうてん">頂点</R>を<R rt="うご">動</R>かして<R rt="かたち">形</R>を<R rt="か">変</R>えられます
-               <button onClick={toggleEditMode} className="ml-4 bg-white text-amber-600 px-3 py-1 rounded-full text-sm hover:bg-amber-50 pointer-events-auto"><R rt="かんりょう">完了</R></button>
+               <PenTool size={18} /> <span><R rt="ちょうてん">頂点</R>を<R rt="うご">動</R>かして<R rt="かたち">形</R>を<R rt="か">変</R>えられます</span>
+               <button onClick={toggleEditMode} className="ml-4 bg-white text-amber-600 px-3 py-1 rounded-full text-sm hover:bg-amber-50 pointer-events-auto"><span><R rt="かんりょう">完了</R></span></button>
              </div>
           )}
         </main>
@@ -1120,19 +1121,19 @@ export default function MathLearningStudio() {
       {/* 1. Polygon Builder Modal */}
       <Modal 
         isOpen={modalConfig.isOpen && modalConfig.type === 'polygon'} 
-        title={<><R rt="たかくけい">多角形</R>を<R rt="つく">作</R>る</>}
+        title={<span><R rt="たかくけい">多角形</R>を<R rt="つく">作</R>る</span>}
         onCancel={closeModal}
         onConfirm={() => {
             const val = document.getElementById('poly-range').value;
             createNGon(parseInt(val));
         }}
-        confirmText={<><R rt="つく">作</R>る</>}
+        confirmText={<span><R rt="つく">作</R>る</span>}
       >
         <div className="flex flex-col items-center gap-6">
            <Hexagon size={48} className="text-indigo-400" strokeWidth={1.5} />
            <div className="w-full">
              <label className="block text-center font-bold text-lg mb-4 text-slate-700">
-               <R rt="ちょうてん">頂点</R>の<R rt="かず">数</R>: <span id="poly-val-display" className="text-indigo-600 text-2xl ml-2">6</span>
+               <span><R rt="ちょうてん">頂点</R>の<R rt="かず">数</R>:</span> <span id="poly-val-display" className="text-indigo-600 text-2xl ml-2">6</span>
              </label>
              <input 
                type="range" id="poly-range" min="3" max="12" step="1" defaultValue="6" 
@@ -1150,7 +1151,7 @@ export default function MathLearningStudio() {
       {/* 2. Size Builder Modal */}
       <Modal
         isOpen={modalConfig.isOpen && modalConfig.type === 'sizeBuilder'}
-        title={<><R rt="さいず">サイズ</R>を<R rt="してい">指定</R>して<R rt="つく">作</R>る</>}
+        title={<span>サイズを<R rt="してい">指定</R>して<R rt="つく">作</R>る</span>}
         onCancel={closeModal}
         onConfirm={() => {
             const type = document.querySelector('input[name="shapeType"]:checked').value;
@@ -1158,24 +1159,24 @@ export default function MathLearningStudio() {
             const h = document.getElementById('size-h').value;
             createSizedShape(type, parseInt(w), parseInt(h));
         }}
-        confirmText={<><R rt="つく">作</R>る</>}
+        confirmText={<span><R rt="つく">作</R>る</span>}
       >
          <div className="space-y-6">
             <div>
-              <p className="font-bold text-slate-700 mb-3"><R rt="かたち">形</R>を<R rt="えら">選</R>ぶ</p>
+              <p className="font-bold text-slate-700 mb-3"><span><R rt="かたち">形</R>を<R rt="えら">選</R>ぶ</span></p>
               <div className="flex gap-4">
                  <label className="flex-1 cursor-pointer">
                     <input type="radio" name="shapeType" value="rect" className="peer sr-only" defaultChecked />
                     <div className="p-4 border-2 border-slate-200 rounded-xl peer-checked:border-indigo-500 peer-checked:bg-indigo-50 flex flex-col items-center gap-2 transition-all">
                        <Square size={32} className="text-indigo-500" />
-                       <span className="font-bold text-slate-700"><R rt="しかくけい">四角形</R></span>
+                       <span className="font-bold text-slate-700"><span><R rt="しかくけい">四角形</R></span></span>
                     </div>
                  </label>
                  <label className="flex-1 cursor-pointer">
                     <input type="radio" name="shapeType" value="tri" className="peer sr-only" />
                     <div className="p-4 border-2 border-slate-200 rounded-xl peer-checked:border-indigo-500 peer-checked:bg-indigo-50 flex flex-col items-center gap-2 transition-all">
                        <Triangle size={32} className="text-indigo-500" />
-                       <span className="font-bold text-slate-700"><R rt="ちょっかくさんかくけい">直角三角形</R></span>
+                       <span className="font-bold text-slate-700"><span><R rt="ちょっかくさんかくけい">直角三角形</R></span></span>
                     </div>
                  </label>
               </div>
@@ -1183,14 +1184,14 @@ export default function MathLearningStudio() {
 
             <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
                <div>
-                  <label className="block font-bold text-slate-700 mb-2"><R rt="よこ">横</R>の<R rt="なが">長</R>さ</label>
+                  <label className="block font-bold text-slate-700 mb-2"><span><R rt="よこ">横</R>の<R rt="なが">長</R>さ</span></label>
                   <div className="relative">
                     <input id="size-w" type="number" min="1" max="20" defaultValue="4" className="w-full pl-4 pr-10 py-3 rounded-xl border border-slate-300 font-bold text-lg focus:ring-2 focus:ring-indigo-500 outline-none" />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">cm</span>
                   </div>
                </div>
                <div>
-                  <label className="block font-bold text-slate-700 mb-2"><R rt="たて">縦</R>の<R rt="なが">長</R>さ</label>
+                  <label className="block font-bold text-slate-700 mb-2"><span><R rt="たて">縦</R>の<R rt="なが">長</R>さ</span></label>
                    <div className="relative">
                     <input id="size-h" type="number" min="1" max="20" defaultValue="3" className="w-full pl-4 pr-10 py-3 rounded-xl border border-slate-300 font-bold text-lg focus:ring-2 focus:ring-indigo-500 outline-none" />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">cm</span>
@@ -1203,12 +1204,15 @@ export default function MathLearningStudio() {
       {/* 3. Confirm Edit Mode Conversion */}
       <Modal
          isOpen={modalConfig.isOpen && modalConfig.type === 'confirmConvert'}
-         title={<><R rt="ずけい">図形</R>を<R rt="へんかん">変換</R>しますか？</>}
+         title={<span><R rt="ずけい">図形</R>を<R rt="へんかん">変換</R>しますか？</span>}
          onCancel={closeModal}
          onConfirm={() => convertToPolygonAndEdit(modalConfig.data.obj)}
-         confirmText={<>はい</>}
+         confirmText={<span>はい</span>}
       >
-         <p className="text-slate-600 font-medium leading-relaxed">この<R rt="ずけい">図形</R>は<R rt="きほんてき">基本的</R>な<R rt="かたち">形</R>です。<br/><R rt="じゆう">自由</R>な<R rt="かたち">形</R>に<R rt="か">変</R>えられるように、<R rt="せんよう">専用</R>の<R rt="ずけい">図形</R>に<R rt="へんかん">変換</R>してもよろしいですか？</p>
+         <p className="text-slate-600 font-medium leading-relaxed">
+           <span>この<R rt="ずけい">図形</R>は<R rt="きほんてき">基本的</R>な<R rt="かたち">形</R>です。</span><br/>
+           <span><R rt="じゆう">自由</R>な<R rt="かたち">形</R>に<R rt="か">変</R>えられるように、<R rt="せんよう">専用</R>の<R rt="ずけい">図形</R>に<R rt="へんかん">変換</R>してもよろしいですか？</span>
+         </p>
       </Modal>
 
       {/* 4. Info Modal */}
@@ -1223,14 +1227,17 @@ export default function MathLearningStudio() {
       {/* 5. Confirm Clear */}
       <Modal
          isOpen={modalConfig.isOpen && modalConfig.type === 'confirmClear'}
-         title={<><R rt="ぜんぶ">全部</R><R rt="け">消</R>しますか？</>}
+         title={<span><R rt="ぜんぶ">全部</R><R rt="け">消</R>しますか？</span>}
          onCancel={closeModal}
          onConfirm={clearCanvas}
-         confirmText={<>はい、<R rt="け">消</R>します</>}
+         confirmText={<span>はい、<R rt="け">消</R>します</span>}
       >
          <div className="flex flex-col items-center gap-4 py-4 text-red-500">
            <Trash2 size={48} strokeWidth={1.5}/>
-           <p className="font-bold text-slate-700 text-lg text-center leading-relaxed">キャンバスにある<R rt="ずけい">図形</R>がすべて<R rt="き">消</R>えます。<br/><R rt="ほんとう">本当</R>によろしいですか？</p>
+           <p className="font-bold text-slate-700 text-lg text-center leading-relaxed">
+             <span>キャンバスにある<R rt="ずけい">図形</R>がすべて<R rt="き">消</R>えます。</span><br/>
+             <span><R rt="ほんとう">本当</R>によろしいですか？</span>
+           </p>
          </div>
       </Modal>
 
